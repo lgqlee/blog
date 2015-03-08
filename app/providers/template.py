@@ -20,3 +20,6 @@ class JinjaProvider(object):
 
     def generate(self, **kwargs):
         return self.template.render(**kwargs)
+
+    def reset(self):
+        self.template = None

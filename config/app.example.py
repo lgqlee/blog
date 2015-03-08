@@ -10,12 +10,12 @@ _env = os.environ.get("RUNTIME_ENV", "development")
 
 app_config = {
     "env": _env,
-    "debug": _env is "development",
+    "debug": _env is not "production",
     "template_path": "./resources/views",
     "template_loader": JinjaProvider("./resources/views",
-                                     auto_reload=_env is "development"),
+                                     auto_reload=_env is not "development"),
     "static_path": "./resources/assets",
     "xsrf_cookies": True,
-    "cookie_secret": "",
+    "cookie_secret": "yourSecretHere",
     "login_url": "/login",
 }
