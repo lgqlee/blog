@@ -2,11 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import tornado.web
+from extended.session import SessionManager
 
 
 class Controller(tornado.web.RequestHandler):
     def initialize(self):
-        pass
+        self.session_manager = SessionManager(self)
+
+    @property
+    def session(self):
+        return self.session_manager.session
 
     def on_finish(self, chunk=None):
-        pass
+        self.session_manager.save()

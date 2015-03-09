@@ -12,7 +12,7 @@ __mongo_client = motor.MotorClient(config.mongo)
 
 
 def get_redis_connection():
-    return redis.Redis(__redis_pool)
+    return redis.Redis(connection_pool=__redis_pool)
 
 
 def get_mongodb_connection():

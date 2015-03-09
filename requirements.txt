@@ -4,3 +4,4 @@ motor
 hiredis
 redis
 nose
+ujson
