@@ -3,7 +3,7 @@
 
 import os
 
-from app.providers.template import JinjaProvider
+from app.extended.jinja_loader import JinjaProvider
 
 
 _env = os.environ.get("RUNTIME_ENV", "development")
@@ -13,7 +13,7 @@ app_config = {
     "debug": _env is not "production",
     "template_path": "./resources/views",
     "template_loader": JinjaProvider("./resources/views",
-                                     auto_reload=_env is not "development"),
+                                     auto_reload=_env is not "production"),
     "static_path": "./resources/assets",
     "xsrf_cookies": True,
     "cookie_secret": "yourSecretHere",
