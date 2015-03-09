@@ -22,7 +22,7 @@ DAY = 60 * 60 * 24
     del self.session["key"]
     sel.session["key"] = None
 4. 删除所有的值
-    del self.session
+    self.session.destroy()
 """
 
 
@@ -33,12 +33,15 @@ class Session(object):
     def __setitem__(self, key, value):
         if self._data.get(key, None) is value:
             return
+        if value is None:
+            del self._data[key]
+            return
         self._data[key] = value
 
     def __getitem__(self, item):
         return self._data.get(item, None)
 
-    def __del__(self):
+    def destroy(self):
         self._data = {}
 
     def __delitem__(self, key):
@@ -74,9 +77,10 @@ class SessionManager(object):
 
     def save(self):
         data = self.session.dump()
-        if not data:
-            return
         session_key = SESSION_PREFIX + self.session_id
+        if not data:
+            self._redis_conn.delete(session_key)
+            return
         self._redis_conn.setex(session_key, data, DAY * SESSION_EXPIRE)
 
     @staticmethod
