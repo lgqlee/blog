@@ -58,6 +58,9 @@ target/
 # Pycharm
 .idea/
 
+# Node
+node_modules/
+
 # Config
 config/app.py
 config/database.py

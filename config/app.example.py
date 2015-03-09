@@ -3,7 +3,7 @@
 
 import os
 
-from app.extended.jinja_loader import JinjaProvider
+from extended.jinja import JinjaProvider
 
 
 _env = os.environ.get("RUNTIME_ENV", "development")

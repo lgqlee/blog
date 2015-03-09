@@ -5,4 +5,8 @@ import tornado.web
 
 
 class Controller(tornado.web.RequestHandler):
-    pass
+    def initialize(self):
+        pass
+
+    def on_finish(self, chunk=None):
+        pass

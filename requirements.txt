@@ -1,4 +1,6 @@
 tornado
 jinja2
 motor
+hiredis
+redis
 nose
