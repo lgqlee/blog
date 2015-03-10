@@ -18,4 +18,8 @@ app_config = {
     "xsrf_cookies": True,
     "cookie_secret": "yourSecretHere",
     "login_url": "/login",
+    "github_oauth": {
+        "key": "",
+        "secret": ""
+    }
 }
