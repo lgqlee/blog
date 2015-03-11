@@ -15,17 +15,18 @@ except ImportError:
     import urllib as urllib_parse
 
 
-class GithubOAuth2Mixin(object):
-    _OAUTH_AUTHORIZE_URL = "https://github.com/login/oauth/authorize"
-    _OAUTH_ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token"
-    _OAUTH_USER_BASE_URL = "https://api.github.com"
-    _OAUTH_SETTINGS_KEY = "github_oauth"
+class DoubanOAuth2Mixin(object):
+    _OAUTH_AUTHORIZE_URL = "https://www.douban.com/service/auth2/auth"
+    _OAUTH_ACCESS_TOKEN_URL = "https://www.douban.com/service/auth2/token"
+    _OAUTH_USER_BASE_URL = "https://api.douban.com/v2"
+    _OAUTH_SETTINGS_KEY = "douban_oauth"
 
     @return_future
     def authorize_redirect(self, scopes=None, response_type="code", callback=None, **kwargs):
         args = {
             "client_id": self.settings[self._OAUTH_SETTINGS_KEY]["key"],
-            "response_type": response_type
+            "response_type": response_type,
+            "redirect_uri": self.settings[self._OAUTH_SETTINGS_KEY]["redirect"]
         }
         if kwargs:
             args.update(kwargs)
@@ -36,7 +37,7 @@ class GithubOAuth2Mixin(object):
         callback()
 
     @_auth_return_future
-    def get_authenticated_user(self, code, callback):
+    def get_authenticated_user(self, code, callback, grant="authorization_code"):
         """Handles the login for the Github user, returning a user object.
 
         Example usage::
@@ -56,6 +57,8 @@ class GithubOAuth2Mixin(object):
             "code": code,
             "client_id": self.settings[self._OAUTH_SETTINGS_KEY]["key"],
             "client_secret": self.settings[self._OAUTH_SETTINGS_KEY]["secret"],
+            "redirect_uri": self.settings[self._OAUTH_SETTINGS_KEY]["redirect"],
+            "grant_type": grant
         })
 
         http.fetch(self._OAUTH_ACCESS_TOKEN_URL,
@@ -74,56 +77,42 @@ class GithubOAuth2Mixin(object):
         access_token = args.get("access_token", None)
         if not access_token:
             return future.set_result(None)
-        scopes = args["scope"].split(",")
-        has_user_email_scope = scopes.count("user:email") > 0
-        self.github_request(
-            path="/user",
+        self.douban_request(
+            path="/user/~me",
             callback=functools.partial(
-                self._on_get_user_info, future, access_token, has_user_email_scope),
-            access_token=access_token
-        )
-
-    def _on_get_user_info(self, future, access_token, has_user_email_scope, user):
-        if user is None:
-            future.set_result(None)
-            return
-
-        user.update({"access_token": access_token})
-        if not has_user_email_scope:
-            return future.set_result(user)
-        self.github_request(
-            path="/user/emails",
-            callback=functools.partial(
-                self._on_get_user_email, future, user),
+                self._on_get_user_info, future, access_token),
             access_token=access_token
         )
 
     @staticmethod
-    def _on_get_user_email(future, user, emails):
-        user.update({"private_emails": [email["email"] for email in emails if email["verified"]]})
+    def _on_get_user_info(future, access_token, user):
+        if user is None:
+            future.set_result(None)
+            return
+        user.update({"access_token": access_token})
         future.set_result(user)
 
     @_auth_return_future
-    def github_request(self, path, callback, access_token=None, post_args=None, **args):
+    def douban_request(self, path, callback, access_token=None, post_args=None, **args):
         url = self._OAUTH_USER_BASE_URL + path
         all_args = {}
-        if access_token:
-            all_args["access_token"] = access_token
-            all_args.update(args)
+        all_args.update(args)
         if all_args:
             url += "?" + urllib_parse.urlencode(all_args)
-        callback = functools.partial(self._on_github_request, callback)
+        callback = functools.partial(self._on_douban_request, callback)
         http = self.get_auth_http_client()
         ua = "tornado"
         if post_args is not None:
             http.fetch(url, method="POST", body=urllib_parse.urlencode(post_args),
                        callback=callback, user_agent=ua,
-                       headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"})
+                       headers={"Content-Type": "application/x-www-form-urlencoded",
+                                "Authorization": "Bearer " + access_token, "Accept": "application/json"})
         else:
-            http.fetch(url, method="GET", callback=callback, user_agent=ua, headers={"Accept": "application/json"})
+            http.fetch(url, method="GET", callback=callback, user_agent=ua,
+                       headers={"Authorization": "Bearer " + access_token, "Accept": "application/json"})
 
     @staticmethod
-    def _on_github_request(future, response):
+    def _on_douban_request(future, response):
         if response.error:
             future.set_exception(AuthError("Error response %s fetching %s" %
                                            (response.error, response.request.url)))
