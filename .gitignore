@@ -64,3 +64,6 @@ node_modules/
 # Config
 config/app.py
 config/database.py
+
+# Other
+*.css

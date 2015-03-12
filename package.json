@@ -7,6 +7,9 @@
     "url": "https://github.com/vincenting/blog.git"
   },
   "dependencies": {
-    "gulp": "*"
+    "gulp-less": "3.*",
+    "gulp-jsbeautifier": "*",
+    "gulp": "*",
+    "gulp-rename": "1.*"
   }
 }
