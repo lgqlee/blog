@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import tornado.gen
-import json
 import uuid
 import hashlib
 from passlib.hash import sha256_crypt
@@ -13,12 +12,13 @@ from extended.database import get_mongodb_connection
 
 
 class AdminLoginController(Controller):
-    __USER_AUTH_COOKIE = "PHP_SESSION"
-
     @tornado.gen.coroutine
     def get(self):
-        # todo 判断 session，如果有登录则跳转/返回 json
-        self.render('admin/login.html', quote=generate())
+        if not self.get_current_user():
+            return self.render('admin/login.html', quote=generate())
+        # todo redirect or json response
+        self.write("hello world")
+
 
     @tornado.gen.coroutine
     def post(self):
@@ -40,7 +40,7 @@ class AdminLoginController(Controller):
         result = yield coll.update({"_id": user["_id"]}, {"$set": {"token": token}})
         if result['n'] < 1:
             return False
-        for item in ("name", "_id", "role"):
+        for item in self.SESSION_USER_INFO:
             self.session[item] = str(user[item])
         if self.get_argument('remember', False):
             self._generate_auth_cookie(token)
@@ -49,4 +49,5 @@ class AdminLoginController(Controller):
     def _generate_auth_cookie(self, token):
         m = hashlib.md5()
         m.update(("{0}{1}".format(token, self.request.headers["User-Agent"])).encode("utf8"))
-        self.set_secure_cookie(self.__USER_AUTH_COOKIE, m.hexdigest(), expires_days=365, httponly=True)
+        self.set_secure_cookie(self.USER_AUTH_COOKIE, "{0}|{1}".format(self.session["_id"], m.hexdigest()),
+                               expires_days=365, httponly=True)

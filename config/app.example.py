@@ -3,23 +3,29 @@
 
 import os
 
-from extended.jinja import JinjaProvider
+from extended.jinja import JinjaLoader
 
 
 _env = os.environ.get("RUNTIME_ENV", "development")
+_is_production = _env is "production"
 
 app_config = {
     "env": _env,
     "debug": _env is not "production",
-    "template_path": "./resources/views",
-    "template_loader": JinjaProvider("./resources/views",
-                                     auto_reload=_env is not "production"),
-    "static_path": "./resources/assets",
+    "template_path": "./resources{0}/views".format(_is_production and '/dist' or ''),
+    "template_loader": JinjaLoader("./resources/views",
+                                   auto_reload=not _is_production),
+    "static_path": "./resources{0}/assets".format(_is_production and '/dist' or ''),
     "xsrf_cookies": True,
-    "cookie_secret": "yourSecretHere",
-    "login_url": "/login",
+    "cookie_secret": "",
+    "login_url": "/admin/login",
     "github_oauth": {
         "key": "",
-        "secret": ""
-    }
+        "secret": "",
+    },
+    "douban_oauth": {
+        "key": "",
+        "secret": "",
+        "redirect": "http://yourwebsite.com/auth/douban"
+    },
 }
