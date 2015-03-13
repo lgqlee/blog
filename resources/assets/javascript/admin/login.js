@@ -3,6 +3,7 @@
  */
 
 $(function () {
+    var $errMsg = $('#loginErrorMsg');
     $('.ui.form').form({
         username: {
             identifier: 'email',
@@ -10,6 +11,9 @@ $(function () {
                 {
                     type: 'empty',
                     prompt: 'Please enter a email'
+                }, {
+                    type: 'email',
+                    prompt: 'Please enter a valid email'
                 }
             ]
         },
@@ -28,6 +32,24 @@ $(function () {
         }
     }, {
         inline: true,
-        on: 'blur'
+        on: 'blur',
+        onSuccess: function (e) {
+            $errMsg.fadeOut();
+            var $form = $(this).addClass('loading');
+            e.preventDefault();
+            var datas = $form.form('get values');
+            datas.password = md5(datas.password);
+            $.ajax({
+                url: '/admin/login', data: datas, type: "POST"
+            }).done(function (res) {
+                if (res.code === 200) {
+                    return window.location.reload();
+                }
+                $errMsg.fadeIn();
+                $errMsg.children('p').text(res.message);
+            }).always(function () {
+                $form.removeClass('loading');
+            });
+        }
     });
 });

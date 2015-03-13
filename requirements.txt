@@ -5,3 +5,5 @@ hiredis
 redis
 nose
 ujson
+passlib
+Whoosh

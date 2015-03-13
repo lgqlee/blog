@@ -15,3 +15,6 @@ class Controller(tornado.web.RequestHandler):
 
     def on_finish(self, chunk=None):
         self.session_manager.save()
+
+    def set_default_headers(self):
+        self._headers["Server"] = "nginx/1.1.19"

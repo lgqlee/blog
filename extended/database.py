@@ -8,7 +8,7 @@ import config.database as config
 
 # 私有变量
 __redis_pool = redis.ConnectionPool(**config.redis)
-__mongo_client = motor.MotorClient(config.mongo)
+__mongo_client = motor.MotorClient(config.mongo).blog
 
 
 def get_redis_connection():

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-mongo = "mongodb://localhost/blog"
+mongo = "mongodb://localhost/"
 redis = {
     "host": "localhost",
     "port": 6379,
