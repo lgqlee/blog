@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="renderer" content="webkit"/>
+    <title>Login - Blog</title>
+    <link rel="stylesheet" href="{{ static_url('css/admin.css') }}"/>
+</head>
+<body>
+<div class="ui page grid">
+    <div class="ui stackable two column centered grid login">
+        <div class="column">
+            <h2 class="ui center aligned icon header">
+                <i class="pink write square icon"></i>
+            </h2>
+
+            <h4 class="ui dividing header centered">Start Writing</h4>
+
+            <div class="ui form">
+
+                <div class="required field">
+
+                    <label>Email</label>
+
+                    <div class="ui icon input">
+                        <input type="text" name="email" placeholder="Email">
+                        <i class="mail icon"></i>
+                    </div>
+                </div>
+                <div class="required field">
+                    <label>Password</label>
+
+                    <div class="ui icon input">
+                        <input type="password" name="password" placeholder="Password">
+                        <i class="lock icon"></i>
+                    </div>
+                </div>
+                <div class="inline field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="loginRememberCheck" checked name="remember">
+                        <label for="loginRememberCheck">Remember me.</label>
+                    </div>
+                </div>
+                <div class="ui submit button">Submit</div>
+            </div>
+            <div class="ui horizontal divider">
+                QUOTE
+            </div>
+            <div class="ui piled segment"> {{quote}}</div>
+
+        </div>
+    </div>
+</div>
+<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>
+<script src="{{static_url('javascript/behaviors/form.js')}}"></script>
+<script src="{{static_url('javascript/admin/login.js')}}"></script>
+</body>
+</html>

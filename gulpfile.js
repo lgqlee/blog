@@ -8,19 +8,20 @@ gulp.task('default', function () {
 });
 
 gulp.task('build-less', function () {
-    gulp.src('./resources/assets/css/*/*.less')
+    gulp.src('./resources/assets/css/*/style.less')
         .pipe(less({compress: true}))
         .on('error', function (e) {
             console.log(e);
         })
         .pipe(prettify({indentSize: 2}))
         .pipe(rename(function (path) {
+            path.basename = path.dirname;
             path.dirname = '';
         }))
         .pipe(gulp.dest('./resources/assets/css/'));
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', ['build-less'], function () {
     gulp.watch([
         './resources/assets/css/**/*.less',
         './resources/assets/css/**/*.variables',
