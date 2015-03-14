@@ -3,25 +3,23 @@
 
 import tornado.gen
 import tornado.web
-import hashlib
-from bson.objectid import ObjectId
 
-from extended.session import SessionManager
 from extended.database import get_mongodb_connection
+from extended.session import SessionManager
+from app.http.mixins.user_mixin import UserMixin
 
 
-class Controller(tornado.web.RequestHandler):
-    USER_AUTH_COOKIE = "PHP_SESSION"
-    SESSION_USER_INFO = ("name", "_id", "role", "email")
-
+class Controller(tornado.web.RequestHandler, UserMixin):
     def initialize(self):
         self.session_manager = SessionManager(self)
+        self.conn = get_mongodb_connection()
 
     @tornado.gen.coroutine
     def prepare(self):
         if not self.session["_id"]:
             user = yield self._check_auth_cookie()
             if not user:
+                self.clear_cookie(self.USER_AUTH_COOKIE)
                 return None
             for item in self.SESSION_USER_INFO:
                 self.session[item] = str(user[item])
@@ -39,34 +37,7 @@ class Controller(tornado.web.RequestHandler):
     def get_current_user(self):
         if not self.session["_id"]:
             return None
-        user = {}
-        for item in self.SESSION_USER_INFO:
-            user[item] = self.session[item]
-        return user
-
-    @tornado.gen.coroutine
-    def _check_auth_cookie(self):
-        auth_cookie = self.get_secure_cookie(self.USER_AUTH_COOKIE, None)
-        if not auth_cookie:
-            return False
-        (user_id, md5_str) = auth_cookie.decode("utf-8", "strict").split("|")
-        if not md5_str:
-            self.clear_cookie(self.USER_AUTH_COOKIE)
-            return False
-        coll = get_mongodb_connection().users
-        user = yield coll.find_one({"_id": ObjectId(user_id)})
-        if not user:
-            self.clear_cookie(self.USER_AUTH_COOKIE)
-            return False
-        m = hashlib.md5()
-        m.update(("{0}{1}".format(user["token"], self.request.headers["User-Agent"])).encode("utf8"))
-        return m.hexdigest() == md5_str and user
-
-    def _generate_auth_cookie(self, token):
-        m = hashlib.md5()
-        m.update(("{0}{1}".format(token, self.request.headers["User-Agent"])).encode("utf8"))
-        self.set_secure_cookie(self.USER_AUTH_COOKIE, "{0}|{1}".format(self.session["_id"], m.hexdigest()),
-                               expires_days=365, httponly=True)
+        return {item: self.session[item] for item in self.SESSION_USER_INFO}
 
     def logout(self):
         self.session.destroy()
