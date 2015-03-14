@@ -24,7 +24,7 @@ class UserMixin():
     @tornado.gen.coroutine
     def _auth_password(self, email, password):
         user = yield self.conn.users.find_one({"email": email})
-        return user and sha256_crypt.verify(password, user["password"]) and user
+        return user and user["password"] and sha256_crypt.verify(password, user["password"]) and user
 
     @tornado.gen.coroutine
     def _check_auth_cookie(self):

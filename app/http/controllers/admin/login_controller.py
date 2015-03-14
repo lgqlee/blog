@@ -15,12 +15,14 @@ class AdminLoginController(Controller):
 
     @tornado.gen.coroutine
     def post(self):
+        if self.get_current_user():
+            return self.write({"code": 200})
         (email, password) = (self.get_argument("email", None), self.get_argument("password", None))
         if not email or not password:
             return self.send_error(400)
         user = yield self._auth_password(email, password)
         if not user:
-            # todo 需要在 redis 中做限制，连续三次失败该 IP 禁用一个小时
+            # todo 需要在 redis 中做限制，三十分钟内连续三次失败该 IP 禁用一个小时
             return self.write({"code": 403, "message": "Email and password not match"})
         token = yield self.update_token(user)
         if token:

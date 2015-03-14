@@ -16,9 +16,9 @@ app_config = {
     "template_loader": JinjaLoader("./resources/views",
                                    auto_reload=not _is_production),
     "static_path": "./resources{0}/assets".format(_is_production and '/dist' or ''),
-    "xsrf_cookies": True,
+    "xsrf_cookies": _is_production,
     "cookie_secret": "",
-    "login_url": "/admin/login",
+    "login_url": "/admin_tests/login",
     "github_oauth": {
         "key": "",
         "secret": "",
