@@ -7,6 +7,7 @@ from extended.oauth.github import GithubOAuth2Mixin
 
 
 class GithubOAuth2LoginController(Controller, GithubOAuth2Mixin):
+
     @tornado.gen.coroutine
     def get(self):
         if self.get_argument('code', False):

@@ -3,6 +3,7 @@
 
 import random
 
+
 __qoute_list = """"Moral indignation is jealousy with a halo."-H. G. Wells (1866-1946)
 "Glory is fleeting, but obscurity is forever."-Napoleon Bonaparte (1769-1821)
 "Victory goes to the player who makes the next-to-last mistake."-Chessmaster Savielly Grigorievitch Tartakower (1887-1956)

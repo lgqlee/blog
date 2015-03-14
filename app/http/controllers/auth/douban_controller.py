@@ -7,6 +7,7 @@ from extended.oauth.douban import DoubanOAuth2Mixin
 
 
 class DoubanOAuth2LoginController(Controller, DoubanOAuth2Mixin):
+
     @tornado.gen.coroutine
     def get(self):
         if self.get_argument('code', False):

@@ -10,6 +10,7 @@ from config.app import app_config
 app = Application(routes, **app_config)
 app.listen(8000)
 
+
 if __name__ == '__main__':
     IOLoop.configure('tornado.platform.asyncio.AsyncIOLoop')
     IOLoop.current().start()

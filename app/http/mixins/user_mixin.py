@@ -39,12 +39,14 @@ class UserMixin():
         if not user:
             return False
         m = hashlib.md5()
-        m.update(("{0}{1}".format(user["token"], self.request.headers["User-Agent"])).encode("utf8"))
+        m.update(
+            ("{0}{1}".format(user["token"], self.request.headers["User-Agent"])).encode("utf8"))
         return m.hexdigest() == md5_str and user
 
     def _generate_auth_cookie(self, token):
         m = hashlib.md5()
-        m.update(("{0}{1}".format(token, self.request.headers["User-Agent"])).encode("utf8"))
+        m.update(
+            ("{0}{1}".format(token, self.request.headers["User-Agent"])).encode("utf8"))
         self.set_secure_cookie(self.USER_AUTH_COOKIE, "{0}|{1}".format(self.session["_id"], m.hexdigest()),
                                expires_days=365, httponly=True)
 

@@ -64,13 +64,15 @@ class DoubanOAuth2Mixin(object):
         http.fetch(self._OAUTH_ACCESS_TOKEN_URL,
                    functools.partial(self._on_access_token, callback),
                    method="POST",
-                   headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
+                   headers={
+                       "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
                    body=body)
 
     def _on_access_token(self, future, response):
         """Callback function for the exchange to the access token."""
         if response.error:
-            future.set_exception(AuthError("Github auth error: %s" % str(response)))
+            future.set_exception(
+                AuthError("Github auth error: %s" % str(response)))
             return
 
         args = escape.json_decode(escape.native_str(response.body))

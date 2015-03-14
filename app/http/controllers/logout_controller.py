@@ -5,6 +5,7 @@ from app.http.controllers import Controller
 
 
 class LogoutController(Controller):
+
     def get(self):
         self.logout()
         if not self.is_ajax:

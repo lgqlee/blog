@@ -27,6 +27,7 @@ DAY = 60 * 60 * 24
 
 
 class Session(object):
+
     def __init__(self, session_data=None):
         self._data = session_data and ujson.loads(session_data) or {}
 
@@ -54,6 +55,7 @@ class Session(object):
 
 
 class SessionManager(object):
+
     def __init__(self, handler):
         self._redis_conn = get_redis_connection()
         self._handler = handler
@@ -64,7 +66,8 @@ class SessionManager(object):
     def initialize(self):
         if not self.session_id:
             self.session_id = str(self._generate_id())
-            self._handler.set_secure_cookie(SESSION_NAME, self.session_id, httponly=True)
+            self._handler.set_secure_cookie(
+                SESSION_NAME, self.session_id, httponly=True)
         else:
             self.session_id = self.session_id.decode("utf-8", "strict")
         self._session = Session(

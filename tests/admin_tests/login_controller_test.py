@@ -22,6 +22,7 @@ coll = pymongo.MongoClient(mongo).blog.users
 
 
 class LoginTest():
+
     def __init__(self):
         self._test_user_id = None
 

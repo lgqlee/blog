@@ -61,13 +61,15 @@ class GithubOAuth2Mixin(object):
         http.fetch(self._OAUTH_ACCESS_TOKEN_URL,
                    functools.partial(self._on_access_token, callback),
                    method="POST",
-                   headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
+                   headers={
+                       "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
                    body=body)
 
     def _on_access_token(self, future, response):
         """Callback function for the exchange to the access token."""
         if response.error:
-            future.set_exception(AuthError("Github auth error: %s" % str(response)))
+            future.set_exception(
+                AuthError("Github auth error: %s" % str(response)))
             return
 
         args = escape.json_decode(escape.native_str(response.body))
@@ -100,7 +102,8 @@ class GithubOAuth2Mixin(object):
 
     @staticmethod
     def _on_get_user_email(future, user, emails):
-        user.update({"private_emails": [email["email"] for email in emails if email["verified"]]})
+        user.update(
+            {"private_emails": [email["email"] for email in emails if email["verified"]]})
         future.set_result(user)
 
     @_auth_return_future
@@ -120,7 +123,8 @@ class GithubOAuth2Mixin(object):
                        callback=callback, user_agent=ua,
                        headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"})
         else:
-            http.fetch(url, method="GET", callback=callback, user_agent=ua, headers={"Accept": "application/json"})
+            http.fetch(url, method="GET", callback=callback,
+                       user_agent=ua, headers={"Accept": "application/json"})
 
     @staticmethod
     def _on_github_request(future, response):

@@ -11,6 +11,7 @@ redis_conn = get_redis_connection()
 
 
 class FakeHandler(object):
+
     def __init__(self):
         self._cookie_container = {}
 
@@ -32,7 +33,8 @@ def test_init():
 def test_set():
     sm.session["name"] = "vincent"
     sm.save()
-    assert redis_conn.get(SESSION_PREFIX + sm.session_id) == '{"name":"vincent"}'
+    assert redis_conn.get(
+        SESSION_PREFIX + sm.session_id) == '{"name":"vincent"}'
     sm.session["name"] = None
     sm.save()
     assert redis_conn.get(SESSION_PREFIX + sm.session_id) is None

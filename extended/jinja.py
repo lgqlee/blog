@@ -7,6 +7,7 @@ from tornado.template import BaseLoader
 
 
 class Template(object):
+
     def __init__(self, template):
         self.template = template
 
@@ -15,6 +16,7 @@ class Template(object):
 
 
 class JinjaLoader(BaseLoader):
+
     def __init__(self, root_directory, **kwargs):
         # 为父类的 init 传空
         super(JinjaLoader, self).__init__()
