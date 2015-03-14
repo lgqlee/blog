@@ -20,6 +20,7 @@ class AdminLoginController(Controller):
             return self.send_error(400)
         user = yield self._auth_password(email, password)
         if not user:
+            # todo 需要在 redis 中做限制，连续三次失败该 IP 禁用一个小时
             return self.write({"code": 403, "message": "Email and password not match"})
         token = yield self.update_token(user)
         if token:

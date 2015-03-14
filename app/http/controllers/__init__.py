@@ -33,7 +33,7 @@ class Controller(tornado.web.RequestHandler, UserMixin):
         return self.get_argument("ajax", False)
 
     def on_finish(self, chunk=None):
-        self.session_manager.save()
+        return self.session_manager.save()
 
     def set_default_headers(self):
         self._headers["Server"] = "nginx/1.1.19"
