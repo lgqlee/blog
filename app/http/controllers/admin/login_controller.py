@@ -16,8 +16,7 @@ class AdminLoginController(Controller):
     def get(self):
         if not self.get_current_user():
             return self.render('admin/login.html', quote=generate())
-        # todo redirect or json response
-        self.write("hello world")
+        self.redirect("/admin")
 
 
     @tornado.gen.coroutine
@@ -45,9 +44,3 @@ class AdminLoginController(Controller):
         if self.get_argument('remember', False):
             self._generate_auth_cookie(token)
         return True
-
-    def _generate_auth_cookie(self, token):
-        m = hashlib.md5()
-        m.update(("{0}{1}".format(token, self.request.headers["User-Agent"])).encode("utf8"))
-        self.set_secure_cookie(self.USER_AUTH_COOKIE, "{0}|{1}".format(self.session["_id"], m.hexdigest()),
-                               expires_days=365, httponly=True)

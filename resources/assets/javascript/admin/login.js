@@ -43,7 +43,7 @@ $(function () {
                 url: '/admin/login', data: datas, type: "POST"
             }).done(function (res) {
                 if (res.code === 200) {
-                    return window.location.reload();
+                    return window.location.replace("/admin");
                 }
                 $errMsg.fadeIn();
                 $errMsg.children('p').text(res.message);
