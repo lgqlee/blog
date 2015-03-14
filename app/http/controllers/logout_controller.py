@@ -7,7 +7,7 @@ from app.http.controllers import Controller
 class LogoutController(Controller):
     def get(self):
         self.logout()
-        if not self.get_argument("ajax", False):
+        if not self.is_ajax:
             return self.redirect("/")
         self.write({"code": 200, "message": "logout success"})
 

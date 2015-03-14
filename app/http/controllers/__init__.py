@@ -28,6 +28,10 @@ class Controller(tornado.web.RequestHandler, UserMixin):
     def session(self):
         return self.session_manager.session
 
+    @property
+    def is_ajax(self):
+        return self.get_argument("ajax", False)
+
     def on_finish(self, chunk=None):
         self.session_manager.save()
 
