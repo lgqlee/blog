@@ -10,6 +10,7 @@ from app.http.mixins.user_mixin import UserMixin
 
 
 class Controller(tornado.web.RequestHandler, UserMixin):
+
     def initialize(self):
         self.session_manager = SessionManager(self)
         self.conn = get_mongodb_connection()

@@ -11,7 +11,9 @@ class GithubOAuth2LoginController(Controller, GithubOAuth2Mixin):
     @tornado.gen.coroutine
     def get(self):
         if self.get_argument('code', False):
-            user = yield self.get_authenticated_user(code=self.get_argument('code'))
+            user = yield self.get_authenticated_user(
+                code=self.get_argument('code')
+            )
             if not user:
                 # todo 需要提示告诉用户验证失败
                 return
