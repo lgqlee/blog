@@ -39,7 +39,6 @@
       datas = $form.form('get values')
       # 对密码进行初步的 md5 加密后上传
       datas.password = md5(datas.password)
-      data.ajax = true
       $.ajax(
         url: '/admin/login'
         data: datas,

@@ -34,6 +34,10 @@ gulp.task('setup', function() {
         gutil.log('delete folders', paths.join('\n'));
       });
     }, 1500);
+    gulp.src([
+        srcPath + 'definitions/**/*.js'
+      ])
+      .pipe(gulp.dest('static/javascript/vendor'));
     return gulp.src([
         srcPath + '**/*.less',
         srcPath + '!(_site)/**/*.overrides',

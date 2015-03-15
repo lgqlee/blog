@@ -49,7 +49,6 @@ class Controller(tornado.web.RequestHandler):
         对用户的 UA 以及 token 进行合并加密对比
         通过则恢复 session
         """
-        print(self.is_ajax)
         if not self.session["_id"]:
             auth_cookie = self.get_secure_cookie(self.USER_AUTH_COOKIE, None)
             if not auth_cookie:
