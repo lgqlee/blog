@@ -3,15 +3,15 @@
 
 import tornado.gen
 
-from app.http.controllers import Controller
-from extended.quotes import generate
+from providers import qoutes
+from controllers import Controller
 
 
 class AdminLoginController(Controller):
 
     def get(self):
         if not self.current_user:
-            return self.render('admin/login.html', quote=generate())
+            return self.render('admin/login.html', quote=qoutes.rand())
         self.redirect("/admin")
 
     @tornado.gen.coroutine

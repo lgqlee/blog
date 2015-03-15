@@ -23,7 +23,7 @@ class UserMixin():
 
     @tornado.gen.coroutine
     def _auth_password(self, email, password):
-        user = yield self.conn.users.find_one({"email": email})
+        user = yield self.mongo_client.users.find_one({"email": email})
         return user and user["password"] and sha256_crypt.verify(password, user["password"]) and user
 
     @tornado.gen.coroutine
@@ -34,7 +34,7 @@ class UserMixin():
         (user_id, md5_str) = auth_cookie.decode("utf-8", "strict").split("|")
         if not md5_str:
             return False
-        coll = self.conn.users
+        coll = self.mongo_client.users
         user = yield coll.find_one({"_id": ObjectId(user_id)})
         if not user:
             return False
@@ -53,7 +53,7 @@ class UserMixin():
     @tornado.gen.coroutine
     def update_token(self, user):
         token = hashlib.sha256(str(uuid.uuid4()).encode("utf8")).hexdigest()
-        result = yield self.conn.users.update({"_id": user["_id"]}, {"$set": {"token": token}})
+        result = yield self.mongo_client.users.update({"_id": user["_id"]}, {"$set": {"token": token}})
         if result['n'] < 1:
             return False
         return token

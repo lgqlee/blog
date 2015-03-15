@@ -1,6 +1,7 @@
 [development]
-  mongo="mongodb://localhost/"
-  login_url="/admin/login"
+  [development.mongo]
+    host="mongodb://localhost/"
+    database="blog"
   [development.redis]
     host="localhost"
     port=6379
@@ -8,8 +9,9 @@
     decode_responses=true
 
 [production]
-  mongo="mongodb://localhost/"
-  login_url="/admin/login"
+  [production.mongo]
+    host="mongodb://localhost/"
+    database="blog"
   [production.redis]
     host="localhost"
     port=6379

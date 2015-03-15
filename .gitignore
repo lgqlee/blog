@@ -69,3 +69,4 @@ node_modules/
 *.css
 static/javascript/*
 !static/javascript/vendor
+# resources/semantic/

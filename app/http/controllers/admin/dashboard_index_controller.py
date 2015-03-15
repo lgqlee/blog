@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from app.http.controllers import Controller
+from controllers import Controller
 
 
 class DashboardIndexController(Controller):

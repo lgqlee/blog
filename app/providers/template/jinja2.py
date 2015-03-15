@@ -1,5 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Date    : 2015-03-15 15:57:03
+# @Author  : Vincent Ting (homerdd@gmail.com)
+# @Link    : http://vincenting.com
 
 import posixpath
 from jinja2 import Environment, FileSystemLoader

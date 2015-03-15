@@ -7,7 +7,7 @@
 import os
 import toml
 
-from extended.jinja import JinjaLoader
+from providers import template
 
 __env = os.environ.get("RUNTIME_ENV", "development")
 __is_production = __env is "production"
@@ -30,8 +30,8 @@ app.update({
     "template_path": "./resources{0}/views".format(
         __is_production and '/dist' or ''
     ),
-    "template_loader": JinjaLoader("./resources/views",
-                                   auto_reload=not __is_production),
+    "template_loader": template.use("jinja2", "./resources/views",
+                                    auto_reload=not __is_production),
     "static_path": "./static{0}".format(
         __is_production and '/dist' or ''
     ),

@@ -3,7 +3,7 @@
 
 import tornado.gen
 from app.http.controllers import Controller
-from extended.oauth.douban import DoubanOAuth2Mixin
+from providers.oauth2.douban import DoubanOAuth2Mixin
 
 
 class DoubanOAuth2LoginController(Controller, DoubanOAuth2Mixin):

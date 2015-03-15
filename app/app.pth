@@ -1,2 +1,4 @@
 http
 http/controllers
+http/mixins
+providers

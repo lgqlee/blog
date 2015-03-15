@@ -1,10 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-import random
-
-
-__qoute_list = """"Moral indignation is jealousy with a halo."-H. G. Wells (1866-1946)
+"Moral indignation is jealousy with a halo."-H. G. Wells (1866-1946)
 "Glory is fleeting, but obscurity is forever."-Napoleon Bonaparte (1769-1821)
 "Victory goes to the player who makes the next-to-last mistake."-Chessmaster Savielly Grigorievitch Tartakower (1887-1956)
 "Don't be so humble you are not that great."-Golda Meir (1898-1978) to a visiting diplomat
@@ -299,8 +293,4 @@ Carl Sagan
 "The truth is more important than the facts."-Frank Lloyd Wright (1868-1959)
 "Research is what I'm doing when I don't know what I'm doing."-Wernher Von Braun (1912-1977)
 "There are only two tragedies in life: one is not getting what one wants, and the other is getting it."-Oscar Wilde (1854-1900)
-"There are only two ways to live your life. One is as though nothing is a miracle. The other is as though everything is a miracle."-Albert Einstein (1879-1955)""".splitlines()
-
-
-def generate():
-    return random.choice(__qoute_list)
+"There are only two ways to live your life. One is as though nothing is a miracle. The other is as though everything is a miracle."-Albert Einstein (1879-1955)

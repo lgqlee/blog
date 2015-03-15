@@ -3,7 +3,7 @@
 
 import tornado.gen
 from app.http.controllers import Controller
-from extended.oauth.github import GithubOAuth2Mixin
+from providers.oauth2.github import GithubOAuth2Mixin
 
 
 class GithubOAuth2LoginController(Controller, GithubOAuth2Mixin):
