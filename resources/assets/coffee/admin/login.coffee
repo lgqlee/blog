@@ -39,6 +39,7 @@
       datas = $form.form('get values')
       # 对密码进行初步的 md5 加密后上传
       datas.password = md5(datas.password)
+      data.ajax = true
       $.ajax(
         url: '/admin/login'
         data: datas,
@@ -47,6 +48,7 @@
           # 如果返回 code 200 则完成跳转
           if res.code is 200
             return window.location.replace("/admin")
+
           $errMsg.fadeIn()
           $errMsg.children('p').text(res.message)
       ).always(()->

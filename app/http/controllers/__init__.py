@@ -4,25 +4,14 @@
 # @Author  : Vincent Ting (homerdd@gmail.com)
 # @Link    : http://vincenting.com
 
-import redis
-import motor
 import tornado.gen
 import tornado.web
 
-from providers import session
-from config import database
+from providers import session, db
 from user_mixin import UserMixin
-
-mongo_config = database["mongo"]
-connection_pools = {
-    "redis": redis.ConnectionPool(**database["redis"]),
-    "mongo": motor.MotorClient(mongo_config["host"])[mongo_config["database"]]
-}
 
 
 class Controller(tornado.web.RequestHandler, UserMixin):
-
-    __db_clients = {}
 
     def initialize(self):
         self.session_manager = session.register(
@@ -40,20 +29,15 @@ class Controller(tornado.web.RequestHandler, UserMixin):
 
     @property
     def redis_client(self):
-        c = self.__db_clients.get("redis", None)
-        if c:
-            return c
-        self.__db_clients["redis"] = redis.Redis(
-            connection_pool=connection_pools["redis"])
-        return self.redis_client
+        """
+        使用 connection_pool 的时候， redis 将在执行一次操作后回收该连接
+        所以每次都要生成新的 connection
+        """
+        return db.get("redis")
 
     @property
     def mongo_client(self):
-        c = self.__db_clients.get("mongo", None)
-        if c:
-            return c
-        self.__db_clients["mongo"] = connection_pools["mongo"]
-        return self.mongo_client
+        return db.get("mongo")
 
     @property
     def session(self):

@@ -11,3 +11,8 @@ Blog for vincenting.com.
 
 * `npm install`
 * `gulp watch`
+
+### todo
+
+1. 发布前的按需打包
+2. 很多很多的功能...
