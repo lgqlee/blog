@@ -9,6 +9,8 @@ Blog for vincenting.com.
 
 ### 开始开发
 
+只支持 python 3.*
+
 * `npm install`
 * `gulp watch`
 
@@ -16,3 +18,4 @@ Blog for vincenting.com.
 
 1. 发布前的按需打包
 2. 很多很多的功能...
+3. 增加命令行功能，包括添加管理员等等

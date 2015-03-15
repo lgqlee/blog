@@ -8,24 +8,16 @@ import tornado.gen
 import tornado.web
 
 from providers import session, db
-from user_mixin import UserMixin
+from models import user as User
 
 
-class Controller(tornado.web.RequestHandler, UserMixin):
+class Controller(tornado.web.RequestHandler):
+
+    USER_AUTH_COOKIE = "PHP_SESSION"
 
     def initialize(self):
         self.session_manager = session.register(
             self, "redis", client=self.redis_client)
-
-    @tornado.gen.coroutine
-    def prepare(self):
-        if not self.session["_id"]:
-            user = yield self._check_auth_cookie()
-            if not user:
-                self.clear_cookie(self.USER_AUTH_COOKIE)
-                return None
-            for item in self.SESSION_USER_INFO:
-                self.session[item] = str(user[item])
 
     @property
     def redis_client(self):
@@ -45,7 +37,32 @@ class Controller(tornado.web.RequestHandler, UserMixin):
 
     @property
     def is_ajax(self):
-        return self.get_argument("ajax", False)
+        """
+        通过 header 信息当前请求是否是 ajax 请求
+        """
+        return self.request.headers.get("X-Requested-With", None) == "XMLHttpRequest"
+
+    @tornado.gen.coroutine
+    def prepare(self):
+        """
+        session 过期检查 cookie 中是否有登录信息
+        对用户的 UA 以及 token 进行合并加密对比
+        通过则恢复 session
+        """
+        print(self.is_ajax)
+        if not self.session["_id"]:
+            auth_cookie = self.get_secure_cookie(self.USER_AUTH_COOKIE, None)
+            if not auth_cookie:
+                return None
+            user_id, md5_str = auth_cookie.decode("utf-8", "strict").split("|")
+            if not md5_str:
+                return None
+            user = yield User.check_token(
+                user_id, self.request.headers.get("User-Agent", None), md5_str)
+            if not user:
+                self.clear_cookie(self.USER_AUTH_COOKIE)
+                return None
+            self.session.update(user)
 
     def on_finish(self, chunk=None):
         return self.session_manager.save()
@@ -56,7 +73,8 @@ class Controller(tornado.web.RequestHandler, UserMixin):
     def get_current_user(self):
         if not self.session["_id"]:
             return None
-        return {item: self.session[item] for item in self.SESSION_USER_INFO}
+        # 返回 session 中内容的副本，防止因为引用修改导致错误
+        return self.session.dump().copy()
 
     def logout(self):
         self.session.destroy()

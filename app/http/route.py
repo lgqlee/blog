@@ -1,14 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Date    : 2015-03-15 17:21:52
+# @Author  : Vincent Ting (homerdd@gmail.com)
+# @Link    : http://vincenting.com
 
 from tornado.web import url
 
-from index_controller import IndexController
-from auth.github_controller import GithubOAuth2LoginController
-from auth.douban_controller import DoubanOAuth2LoginController
-from admin.login_controller import AdminLoginController
-from logout_controller import LogoutController
-from admin.dashboard_index_controller import DashboardIndexController
+from controllers.index import IndexController
+from controllers.auth.github import GithubOAuth2LoginController
+from controllers.auth.douban import DoubanOAuth2LoginController
+from controllers.admin.login import AdminLoginController
+from controllers.logout import LogoutController
+from controllers.admin.dashboard import DashboardIndexController
 
 routes = [
     url(r"/", IndexController),

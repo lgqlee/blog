@@ -32,13 +32,19 @@ class Session(object):
         """
         清空当前 session 内容
         """
-        self.__data = {}
+        self.__data.clear()
+
+    def update(self, kwags):
+        """
+        批量更新 session
+        """
+        self.__data.update(kwags)
 
     def __delitem__(self, key):
         del self.__data[key]
 
     def dump(self):
-        return self.__data
+        return {item: self.__data[item] for item in self.__data if self.__data[item]}
 
 
 class SessionManger(object):

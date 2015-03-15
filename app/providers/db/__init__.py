@@ -28,5 +28,5 @@ def _get_mongo_client():
 def get(name):
     return {
         "redis": _get_redis_client,
-        "mogno": _get_mongo_client
+        "mongo": _get_mongo_client
     }[name]()

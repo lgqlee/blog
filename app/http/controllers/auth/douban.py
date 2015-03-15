@@ -1,5 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Date    : 2015-03-15 19:34:23
+# @Author  : Vincent Ting (homerdd@gmail.com)
+# @Link    : http://vincenting.com
 
 import tornado.gen
 from app.http.controllers import Controller

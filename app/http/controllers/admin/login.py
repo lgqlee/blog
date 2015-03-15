@@ -1,10 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# @Date    : 2015-03-15 19:57:49
+# @Author  : Vincent Ting (homerdd@gmail.com)
+# @Link    : http://vincenting.com
 
 import tornado.gen
 
 from providers import qoutes
 from controllers import Controller
+from models import user as User
 
 
 class AdminLoginController(Controller):
@@ -22,22 +26,28 @@ class AdminLoginController(Controller):
             self.get_argument("email", None),
             self.get_argument("password", None)
         )
+        # 参数不完整直接返回 http 错误
         if not email or not password:
             return self.send_error(400)
-        user = yield self._auth_password(email, password)
+        user = yield User.auth_by_password(email, password)
         if not user:
             # todo 需要在 redis 中做限制，三十分钟内连续三次失败该 IP 禁用一个小时
             return self.write({
                 "code": 403,
                 "message": "Email and password not match"
             })
-        token = yield self.update_token(user)
+        token = yield User.update_token(user["_id"])
         if token:
-            for item in self.SESSION_USER_INFO:
-                self.session[item] = str(user[item])
+            self.session.update(user)
             if self.get_argument('remember', False):
-                self._generate_auth_cookie(token)
-            return self.write({"code": 200})
+                voucher = User.encrypt_by_token(
+                    token,
+                    self.request.headers["User-Agent"]
+                )
+                self.set_secure_cookie(
+                    self.USER_AUTH_COOKIE, voucher, expires_days=120, version=None)
+                return self.write({"code": 200})
+        # 生成 token 失败返回 500
         self.write({
             "code": 500,
             "message": "Login with error, please try again"
