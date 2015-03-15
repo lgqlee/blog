@@ -4,7 +4,7 @@
 import redis
 import motor
 
-from configuration import database
+from config import database
 
 # 私有变量
 __redis_pool = redis.ConnectionPool(**database["redis"])

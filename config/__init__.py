@@ -12,9 +12,9 @@ from extended.jinja import JinjaLoader
 __env = os.environ.get("RUNTIME_ENV", "development")
 __is_production = __env is "production"
 
-with open("./configuration/app.toml") as conffile:
+with open("./config/app.toml") as conffile:
     app = toml.loads(conffile.read())[__env]
-with open("./configuration/database.toml") as conffile:
+with open("./config/database.toml") as conffile:
     database = toml.loads(conffile.read())[__env]
 
 """

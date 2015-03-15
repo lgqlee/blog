@@ -9,7 +9,7 @@ from tornado.web import Application
 
 import bootstrap as _
 from route import routes
-from configuration import app as config
+from config import app as config
 
 app = Application(routes, **config)
 app.listen(8000)
