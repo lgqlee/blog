@@ -67,3 +67,5 @@ config/database.py
 
 # Other
 *.css
+static/javascript/*
+!static/javascript/vendor

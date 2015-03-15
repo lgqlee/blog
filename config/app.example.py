@@ -8,7 +8,7 @@ from extended.jinja import JinjaLoader
 _env = os.environ.get("RUNTIME_ENV", "development")
 _is_production = _env is "production"
 
-app_config = {
+config = {
     "env": _env,
     "debug": _env is not "production",
     "template_path": "./resources{0}/views".format(
@@ -16,7 +16,7 @@ app_config = {
     ),
     "template_loader": JinjaLoader("./resources/views",
                                    auto_reload=not _is_production),
-    "static_path": "./resources{0}/assets".format(
+    "static_path": "./static{0}".format(
         _is_production and '/dist' or ''
     ),
     "xsrf_cookies": _is_production,
