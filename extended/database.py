@@ -4,11 +4,11 @@
 import redis
 import motor
 
-import config.database as config
+from configuration import database
 
 # 私有变量
-__redis_pool = redis.ConnectionPool(**config.redis)
-__mongo_client = motor.MotorClient(config.mongo).blog
+__redis_pool = redis.ConnectionPool(**database["redis"])
+__mongo_client = motor.MotorClient(database["mongo"]).blog
 
 
 def get_redis_connection():

@@ -62,8 +62,8 @@ target/
 node_modules/
 
 # Config
-config/app.py
-config/database.py
+*toml
+!*.example.toml
 
 # Other
 *.css

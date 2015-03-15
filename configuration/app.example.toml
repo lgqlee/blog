@@ -1,0 +1,21 @@
+[development]
+  cookie_secret=""
+  login_url="/admin/login"
+  [development.github_oauth]
+    key=""
+    secret=""
+  [development.douban_oauth]
+    key=""
+    secret=""
+    redirect="http://yourwebsite.com/auth/douban"
+
+[production]
+  cookie_secret=""
+  login_url="/admin/login"
+  [production.github_oauth]
+    key=""
+    secret=""
+  [production.douban_oauth]
+    key=""
+    secret=""
+    redirect="http://yourwebsite.com/auth/douban"

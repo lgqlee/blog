@@ -15,6 +15,9 @@ gulp.task('default', function() {
   gutil.log("Hello Blog");
 });
 
+// todo 考虑将 semantic 从项目中去掉，通过 gulp setup 来进行初始化时下载
+// 从而可以默认下载最新版本
+
 // 对 resources 中的 less 文件进行编译
 gulp.task('build-less', function() {
   return gulp.src('./resources/assets/less/*/style.less')

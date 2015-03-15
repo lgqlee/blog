@@ -9,3 +9,4 @@ passlib
 Whoosh
 requests
 pymongo
+toml

@@ -1,0 +1,17 @@
+[development]
+  mongo="mongodb://localhost/"
+  login_url="/admin/login"
+  [development.redis]
+    host="localhost"
+    port=6379
+    db=0
+    decode_responses=true
+
+[production]
+  mongo="mongodb://localhost/"
+  login_url="/admin/login"
+  [production.redis]
+    host="localhost"
+    port=6379
+    db=0
+    decode_responses=true
