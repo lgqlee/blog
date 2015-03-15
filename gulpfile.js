@@ -6,17 +6,42 @@
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var del = require('del');
 var less = require('gulp-less');
 var rename = require("gulp-rename");
 var prettify = require('gulp-jsbeautifier');
 var coffee = require('gulp-coffee');
+var git = require('gulp-git');
 
 gulp.task('default', function() {
   gutil.log("Hello Blog");
 });
 
-// todo 考虑将 semantic 从项目中去掉，通过 gulp setup 来进行初始化时下载
-// 从而可以默认下载最新版本
+// 从 git 上获取 semantic 的文件并放入对应文件夹
+gulp.task('setup', function() {
+  gutil.log("start clone semantic from github.");
+  return git.clone('https://github.com/Semantic-Org/Semantic-UI.git', {
+    quite: false
+  }, function(err) {
+    if (err) {
+      return gutil.log(err);
+    }
+    gutil.log("setup will finish soon.");
+
+    var srcPath = 'Semantic-UI/src/';
+    setTimeout(function() {
+      del(['Semantic-UI'], function(err, paths) {
+        gutil.log('delete folders', paths.join('\n'));
+      });
+    }, 1500);
+    return gulp.src([
+        srcPath + '**/*.less',
+        srcPath + '!(_site)/**/*.overrides',
+        srcPath + '!(_site)/**/*.variables'
+      ])
+      .pipe(gulp.dest('resources/semantic'));
+  });
+});
 
 // 对 resources 中的 less 文件进行编译
 gulp.task('build-less', function() {

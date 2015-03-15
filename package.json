@@ -10,6 +10,7 @@
     "gulp-less": "3.*",
     "gulp-jsbeautifier": "*",
     "gulp": "*",
+    "del": "*",
     "gulp-util": "*",
     "gulp-rename": "1.*",
     "gulp-coffee": "2.*"

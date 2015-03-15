@@ -12,6 +12,7 @@ Blog for vincenting.com.
 只支持 python 3.*
 
 * `npm install`
+* `gulp setup`
 * `gulp watch`
 
 ### todo
