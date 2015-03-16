@@ -8,6 +8,5 @@ coverage
 ujson
 passlib
 Whoosh
-requests
-pymongo
 toml
+pymongo

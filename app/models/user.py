@@ -56,7 +56,7 @@ def update_token(user_id):
     token = hashlib.sha256(str(uuid.uuid4()).encode("utf8")).hexdigest()
     result = yield mongo_coll.update({"_id": b_id}, {"$set": {"token": token}})
     if result['n'] < 1:
-        return False
+        return None
     return token
 
 
