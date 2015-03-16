@@ -72,9 +72,15 @@ class UserTests(AsyncTestCase):
         true_result = yield User.check_token(
             self.user_id, "here is salt", voucher)
         assert true_result is not False
-        true_result = yield User.check_token(
+        false_result = yield User.check_token(
             self.user_id, "here is fake salt", voucher)
-        assert true_result is False
-        true_result = yield User.check_token(
+        assert false_result is False
+        false_result = yield User.check_token(
             self.user_id, "here is salt", "here is a fake voucher")
-        assert true_result is False
+        assert false_result is False
+        false_result = yield User.check_token(
+            self.user_id, None, "here is a fake voucher")
+        assert false_result is False
+        false_result = yield User.check_token(
+            "0123456789ab0123456789ab", "here is salt", "here is a fake voucher")
+        assert false_result is False
