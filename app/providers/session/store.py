@@ -22,11 +22,18 @@ class Store(object):
         """
         对内容进行处理，如果是非字符串，则进行 json 格式转化
         """
-        return content if type(content) is self.STRING_TYPE else ujson.dumps(content)
+        if not content:
+            return None
+        if type(content) is self.STRING_TYPE:
+            return content
+        return ujson.dumps(content)
 
     @staticmethod
     def loads(content):
-        return ujson.loads(content)
+        try:
+            return ujson.loads(content)
+        except ValueError:
+            return content
 
 
 class RedisStore(Store):

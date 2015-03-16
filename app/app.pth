@@ -1,6 +1,5 @@
 http
 http/controllers
-http/mixins
 http/decorators
 models
 providers

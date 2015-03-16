@@ -4,6 +4,7 @@ motor
 hiredis
 redis
 nose
+coverage
 ujson
 passlib
 Whoosh
