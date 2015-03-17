@@ -24,13 +24,13 @@ with open("./config/database.toml") as conffile:
 print("server is now running in {0} mode".format(__env))
 
 """
-开发环境中模板和静态文件分别存放在 ./resources/views 和 ./_static
-开发只需要维护 ./resources，./_static 是 gulp setup 自动生成目录
+开发环境中模板和静态文件分别存放在 ./resources/views 和 ./static
+开发只需要维护 ./resources，./static 是 gulp setup 自动生成目录
 同时他会根据 ./resources 的文件进行同步
-发布时进行一些处理操作后放到 ./views 和 ./static 文件夹
+发布时进行一些处理操作后放到 ./views 和 ./public 文件夹
 """
 template_path = "./resources/views" if not __is_production else "./views"
-static_path = "./static"
+static_path = "./static" if not __is_production else './public'
 
 # 用户自定义与系统配置进行合并
 app.update({

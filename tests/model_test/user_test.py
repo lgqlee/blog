@@ -6,6 +6,7 @@
 
 import bootstrap as _
 from passlib.hash import sha256_crypt
+from hashlib import md5
 from tornado.ioloop import IOLoop
 from tornado.testing import AsyncTestCase
 from tornado.testing import gen_test
@@ -27,16 +28,18 @@ class UserTests(AsyncTestCase):
     def setUp(self):
         AsyncTestCase.setUp(self)
         self.tmp_email = "fake@fake.com"
-        self.tmp_password = "411f34d7010c5d07b7632f1a8744d4df"
+        self.tmp_password = "121231"
         self.tmp_roles = ["admin"]
         self._create_user()
 
     # 生成一个临时的账号
     def _create_user(self):
-        password = sha256_crypt.encrypt(self.tmp_password)
+        m = md5()
+        m.update(self.tmp_password.encode(encoding='utf_8', errors='strict'))
+        self.tmp_password = m.hexdigest()
         self.user_id = coll.insert({
             "name": "vt",
-            "password": password,
+            "password": sha256_crypt.encrypt(self.tmp_password),
             "role": self.tmp_roles,
             "email": self.tmp_email
         })
