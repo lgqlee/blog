@@ -5,9 +5,11 @@
 # @Link    : http://vincenting.com
 
 from controllers import Controller
+from decorators.permission import permission
 
 
 class DashboardIndexController(Controller):
 
+    @permission("admin")
     def get(self):
         self.render("admin/dashboard.html")

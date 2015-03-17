@@ -62,9 +62,9 @@ class UserTests():
             "email": self.tmp_email,
             "password": "-",
         })
-        assert res.json()["code"] == 403
+        assert res.json()["code"] == 412
         res = requests.post("http://localhost:8000/admin/login", {
             "email": self.tmp_email + "a",
             "password": self.tmp_password,
         })
-        assert res.json()["code"] == 403
+        assert res.json()["code"] == 412

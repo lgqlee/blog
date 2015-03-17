@@ -33,7 +33,7 @@ class AdminLoginController(Controller):
         if not user:
             # todo 需要在 redis 中做限制，三十分钟内连续三次失败该 IP 禁用一个小时
             return self.write({
-                "code": 403,
+                "code": 412,
                 "message": "Email and password not match"
             })
         token = yield User.update_token(user["_id"])
