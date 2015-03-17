@@ -11,39 +11,52 @@ var less = require('gulp-less');
 var rename = require("gulp-rename");
 var prettify = require('gulp-jsbeautifier');
 var coffee = require('gulp-coffee');
+var download = require('gulp-download');
+var unzip = require('gulp-unzip')
+
 var git = require('gulp-git');
 
 gulp.task('default', function() {
   gutil.log("Hello Blog");
 });
 
-// 从 git 上获取 semantic 的文件并放入对应文件夹
-gulp.task('setup', function() {
-  gutil.log("start clone semantic from github.");
-  return git.clone('https://github.com/Semantic-Org/Semantic-UI.git', {
-    quite: false
-  }, function(err) {
-    if (err) {
-      return gutil.log(err);
-    }
-    gutil.log("setup will finish soon.");
+gulp.task('fetch-semantic', function() {
+  return download('https://github.com/Semantic-Org/Semantic-UI/archive/master.zip')
+    .pipe(unzip())
+    .pipe(gulp.dest('./tmp'));
+});
 
-    var srcPath = 'Semantic-UI/src/';
-    setTimeout(function() {
-      del(['Semantic-UI'], function(err, paths) {
-        gutil.log('delete folders', paths.join('\n'));
-      });
-    }, 1500);
-    gulp.src([
-        srcPath + 'definitions/**/*.js'
-      ])
-      .pipe(gulp.dest('static/javascript/vendor'));
-    return gulp.src([
-        srcPath + '**/*.less',
-        srcPath + '!(_site)/**/*.overrides',
-        srcPath + '!(_site)/**/*.variables'
-      ])
-      .pipe(gulp.dest('resources/semantic'));
+var srcPath = './tmp/Semantic-UI-master/src/';
+
+gulp.task('setup-less', function() {
+  return gulp.src([
+      srcPath + '**/*.less',
+      srcPath + '!(_site)/**/*.overrides',
+      srcPath + '!(_site)/**/*.variables'
+    ])
+    .pipe(gulp.dest('resources/semantic'));
+});
+
+gulp.task('setup-javascript', function() {
+  return gulp.src([
+      srcPath + 'definitions/**/*.js'
+    ])
+    .pipe(gulp.dest('static/javascript/vendor'));
+});
+
+gulp.task('setup-fonts', function() {
+  return gulp.src([
+      srcPath + 'themes/default/assets/fonts/*.*'
+    ])
+    .pipe(gulp.dest('static/fonts'));
+});
+
+gulp.task('prepare', ['fetch-semantic'], function() {});
+
+// 从 git 上获取 semantic 的文件并放入对应文件夹
+gulp.task('setup', ['setup-less', 'setup-javascript', 'setup-fonts'], function() {
+  del(['./tmp'], function(err, paths) {
+    gutil.log('delete folders', paths.join('\n'));
   });
 });
 

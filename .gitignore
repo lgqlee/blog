@@ -67,10 +67,6 @@ node_modules/
 
 # Other
 *.css
-static/javascript/*
-!static/javascript/vendor
 resources/semantic/
 !resources/semantic/theme.config
-static/javascript/vendor/behaviors/*
-static/javascript/vendor/modules/*
-static/javascript/vendor/globals/*
+static/
