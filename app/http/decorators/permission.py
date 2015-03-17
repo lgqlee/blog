@@ -27,8 +27,7 @@ def permission(*roles):
                         "message": "please login",
                     })
                 if self.request.method in ("GET", "HEAD"):
-                    self.redirect(self.get_login_url())
-                    return
+                    return self.redirect(self.get_login_url())
                 raise HTTPError(403, reason="Please login")
             if len(roles) > 0:
                 current_roles = self.current_user.get("roles", ())
