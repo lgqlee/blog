@@ -18,6 +18,7 @@
     "gulp-unzip": "*"
   },
   "scripts": {
-    "test": "nosetests ./tests --with-coverage -v"
+    "test": "nosetests ./tests --with-coverage -v",
+    "start": "python server.py"
   }
 }

@@ -14,12 +14,13 @@ import providers.db
 
 """
 users collection
-字段名称    数据类型    可空
-name       string     no
-email      string     no
-password   string     yes
-roles      string[]   yes
-token      string     no
+字段名称    数据类型               可空
+name       string                no
+email      string                no
+password   string                yes
+roles      string[]              yes
+token      string                no
+social     dict{string: string}  yes
 """
 mongo_coll = providers.db.get("mongo").users
 
@@ -54,7 +55,7 @@ def update_token(user_id):
     """
     b_id = user_id if isinstance(user_id, ObjectId) else ObjectId(user_id)
     token = hashlib.sha256(str(uuid.uuid4()).encode("utf8")).hexdigest()
-    result = yield mongo_coll.update({"_id": b_id}, {"$set": {"token": token}})
+    result = yield mongo_coll.update({"_id": b_id}, {"$set": {"token": token}, "$currentDate": {"last_login": True}})
     if result['n'] < 1:
         return None
     return token
