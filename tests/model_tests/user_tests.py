@@ -69,6 +69,11 @@ class UserTests(AsyncTestCase):
         assert token is None
 
     @gen_test
+    def test_get_user_info(self):
+        user = yield User.info_by_id(self.user_id)
+        assert user["name"] == "vt"
+
+    @gen_test
     def test_token_check(self):
         token = yield User.update_token(self.user_id)
         voucher = User.encrypt_by_token(token, "here is salt")

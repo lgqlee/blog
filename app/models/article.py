@@ -9,16 +9,27 @@ import tornado.gen
 import providers.db
 
 """
-users collection
-字段名称     数据类型    可空
-title       string     no
-email       string     no
-password    string     yes
-roles       string[]   yes
-created_at  datetime   no
-- - -
-草稿使用单独的草稿库来存放
-确认发布后再与原文章合并更新
-"""
+aritcles collection
+字段名称     数据类型               可空
+title       string                no
+content     dict{string: string}  yes
+author      objectid              no
+tags        objectid[]            no
+deleted     boolean               yes
+created_at  datetime              no
+updated_at  datatime              no
 
-mongo_coll = providers.db.get("mongo").users
+- - -
+drafts collection
+字段名称     数据类型               可空
+title       string                yes
+article_id  objectid              yes
+content     dict{string: string}  yes
+author      objectid              no
+tags        objectid[]            yes
+deleted     boolean               yes
+created_at  datetime              no
+updated_at  datatime              no
+"""
+# 草稿使用单独的草稿库来存放
+# 确认发布后再与原文章合并更新

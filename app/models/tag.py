@@ -13,6 +13,9 @@ mongo_coll = providers.db.get("mongo").tags
 
 @tornado.gen.coroutine
 def findOrCreate(name):
+    """
+    根据标签名称返回标签的 id
+    """
     info = {"name": name}
     tag = yield mongo_coll.find_one(info, projection={"name": False})
     if tag:

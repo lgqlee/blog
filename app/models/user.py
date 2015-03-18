@@ -83,3 +83,13 @@ def check_token(user_id, salt, voucher):
     if not user:
         return False
     return encrypt_by_token(user["token"], salt) == voucher and __user_info_filter(user)
+
+
+@tornado.gen.coroutine
+def info_by_id(user_id):
+    """
+    根据 user_id 获得用户的基本信息
+    """
+    b_id = user_id if isinstance(user_id, ObjectId) else ObjectId(user_id)
+    user = yield mongo_coll.find_one({"_id": b_id})
+    return user and __user_info_filter(user)
