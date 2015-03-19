@@ -14,6 +14,7 @@ Blog for vincenting.com.
 只支持 python 3.*
 
 * `npm install`
+* `for req in $(cat requirements.txt); do sudo pip install $req; done`
 * `bower install && gulp prepare && gulp setup` 下载前端需要的第三方内容
 * `gulp watch`
 * `npm test` 对 python 进行测试
@@ -24,3 +25,5 @@ Blog for vincenting.com.
 2. 很多很多的功能...
 3. 增加命令行功能，包括添加管理员等等
 4. 使用 watir 等工具生成所有可能出现的页面，然后对 css 进行未使用删除来压缩
+5. 实现基于 motor 的 ORM
+6. 考虑实现 commands，主要用于在请求结束后继续其他操作
