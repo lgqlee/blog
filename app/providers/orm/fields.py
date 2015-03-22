@@ -51,12 +51,13 @@ class Field(object):
     """
     field_type = "field"
 
-    def __init__(self, index=False, unique=False, readonly=False, default=None, column=None):
+    def __init__(self, verbose_name=None, index=False, unique=False, readonly=False, default=None, column=None):
         self.index = index
         self.unique = unique
         self.readonly = readonly
         self.default = default
         self.column = column
+        self.verbose_name = verbose_name
 
     @classmethod
     def extend(cls, name=None):
