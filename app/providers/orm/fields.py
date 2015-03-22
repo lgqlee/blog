@@ -29,7 +29,7 @@ class FieldDescriptor(object):
 
     def __get__(self, instance, instance_type=None):
         if instance is not None:
-            return instance._data.get(self.att_name)
+            return instance._data.get(self.att_name, None)
         return self.field
 
     def __set__(self, instance, value):
@@ -38,7 +38,9 @@ class FieldDescriptor(object):
             raise AttributeError(
                 "Can not change readonly attribute {0}".format(self.att_name))
         instance._data[self.att_name] = value
-        # TODO 考虑通过记录原始值来判断是否为 dirty
+        # 通过记录原值来获得准确的修改值
+        if instance._origin_data.get(self.att_name, None) == value:
+            return instance._dirty.discard(self.att_name)
         instance._dirty.add(self.att_name)
 
 
@@ -54,7 +56,7 @@ class Field(object):
         self.column = column
 
     @classmethod
-    def extend(cls, name=None, clone=False):
+    def extend(cls, name=None):
         def decorator(method):
             method_name = name or method.__name__
             setattr(cls, method_name, method)
