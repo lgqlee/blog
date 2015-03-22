@@ -46,7 +46,7 @@ class AdminLoginController(Controller):
                 )
                 self.set_secure_cookie(
                     self.USER_AUTH_COOKIE, voucher, expires_days=120, version=None)
-                return self.write({"code": 200})
+            return self.write({"code": 200})
         # 生成 token 失败返回 500
         self.write({
             "code": 500,

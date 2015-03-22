@@ -5,16 +5,17 @@
 # @Link    : http://vincenting.com
 
 """
-unique index readonly default column database
+unique index readonly default column database protect
 
 class Author(Model):
     email = StringField(unique=True, index=True)
     first_name = StringField()
     last_name = StringField()
 
-    index(("first_name", "last_name"), unique=True)
     articles = has_many(Article)
-    # article = has_one(Article)
+
+    def initialize(self):
+        self.index(("first_name", "last_name"), unique=True)
 
 class Article(Model):
     private = BoolField(default=False)
@@ -22,25 +23,25 @@ class Article(Model):
     url = StringField(unique=True, index=True)
 
     user = belongs_to(Author)
-    tags = embeds_many(Tag)
-    # tag = embeds_one(Tag)
+    # tags = has_some(Tag)
 
     @validate("title")
-    def check_something(content)
+    def check_something(self, content)
         return ValidateError("something wrong")
 
     @before_hook("create")
-    def on_create(article):
+    def on_create(self, article):
         pass
 
     @after_hook("create"):
-    def after_create(article):
+    def after_create(self, article):
         pass
 
 class Tag(Model):
     name = StringField()
 
     article = embedded_in(Article)
+    # articles = has_many()
 
 Author.create_article(title="some")
 # Author.build_article(title="some")

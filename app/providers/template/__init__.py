@@ -4,7 +4,7 @@
 # @Author  : Vincent Ting (homerdd@gmail.com)
 # @Link    : http://vincenting.com
 
-from template.jinja2 import JinjaLoader
+from .jinja2 import JinjaLoader
 
 
 def use(template, root_path, **kwargs):
