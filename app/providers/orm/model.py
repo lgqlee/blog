@@ -4,8 +4,17 @@
 # @Author  : Vincent Ting (homerdd@gmail.com)
 # @Link    : http://vincenting.com
 
-from .fields import *
 from copy import deepcopy
+
+from .fields import *
+from .query import *
+
+DEFAULT_DATABASE = [None]
+
+
+def set_database(database):
+    # 修改 module 中的默认数据库
+    DEFAULT_DATABASE[0] = database
 
 
 class ModelOptions(object):
@@ -20,7 +29,7 @@ class ModelOptions(object):
         self._default_dict = {}
         self._default_callables = {}
 
-        self.database = database
+        self.database = database or DEFAULT_DATABASE[0]
         self.db_collection = db_collection
 
         for key, value in kwargs.items():
@@ -142,3 +151,8 @@ class Model(metaclass=BaseModel):
     @property
     def dirty_fields(self):
         return [f for f in self._meta.get_fields() if f.name in self._dirty]
+
+    @staticmethod
+    @property
+    def coll(cls):
+        return cls._meta.database[cls._meta.db_collection]
