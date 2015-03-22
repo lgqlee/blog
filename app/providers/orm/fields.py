@@ -46,9 +46,12 @@ class FieldDescriptor(object):
 
 class Field(object):
 
+    """
+     抽象类 Field
+    """
     field_type = "field"
 
-    def __init(self, index=False, unique=False, readonly=False, default=None, column=None):
+    def __init__(self, index=False, unique=False, readonly=False, default=None, column=None):
         self.index = index
         self.unique = unique
         self.readonly = readonly
