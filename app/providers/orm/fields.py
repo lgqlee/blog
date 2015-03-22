@@ -51,13 +51,16 @@ class Field(object):
     """
     field_type = "field"
 
-    def __init__(self, verbose_name=None, index=False, unique=False, readonly=False, default=None, column=None):
+    def __init__(self, verbose_name=None, index=False, unique=False, readonly=False,
+                 default=None, column=None, primary_key=False, timestamp=False):
         self.index = index
         self.unique = unique
         self.readonly = readonly
         self.default = default
         self.column = column
         self.verbose_name = verbose_name
+        self.primary_key = primary_key
+        self.timestamp = timestamp
 
     @classmethod
     def extend(cls, name=None):
@@ -138,6 +141,8 @@ class DatetimeField(Field):
     ]
 
     def coerce(self, value):
+        if not value:
+            return None
         if not isinstance(value, datetime):
             for fmt in self.formats:
                 try:

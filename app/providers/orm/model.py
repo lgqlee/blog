@@ -7,6 +7,7 @@
 from .fields import *
 from copy import deepcopy
 
+
 class ModelOptions(object):
 
     def __init__(self, cls, database=None, db_collection=None, ** kwargs):
@@ -87,9 +88,9 @@ class BaseModel(type):
                     # 父类不能覆盖子类的内容
                     continue
                 if isinstance(v, FieldDescriptor):
-                    # 继承父类的 field
-                    # todo 需要排除掉 _id，以及 updated_at 和 ignored_at
-                    attrs[k] = deepcopy(v.field)
+                    # 继承父类的 field, 排除掉 _id，以及 updated_at 和 ignored_at
+                    if not v.field.primary_key and not v.field.timestamp:
+                        attrs[k] = deepcopy(v.field)
 
         # 初始化类并加上方法
         cls = super(BaseModel, cls).__new__(cls, name, bases, attrs)
@@ -105,12 +106,17 @@ class BaseModel(type):
         for name, attr in cls.__dict__.items():
             if isinstance(attr, Field):
                 fields.append((attr, name))
+        # 默认添加 id 字段，必选
+        fields.append((ObjectIdField(primary_key=True, column="_id"), "id"))
+        # 如果没有 ignore_timestamp，添加 updated_at 和 created_at
+        if not meta_options.get("ignore_timestamp", False):
+            for f in ("created_at", "updated_at"):
+                fields.append(
+                    (ObjectIdField(timestamp=True), f))
 
         for field, name in fields:
             field.add_to_class(cls, name)
         cls._meta.prepared()
-
-        # TODO 考虑缓存上面生成的内容，复用实例来降低运算量
 
         if hasattr(cls, '__unicode__'):
             setattr(cls, '__repr__', lambda self: '<%s: %r>' % (
