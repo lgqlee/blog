@@ -9,14 +9,14 @@ from tornado.web import Application
 from tornado.options import define, options, parse_command_line
 
 import bootstrap as _
-from route import routes
+from app.http.controllers import Route
 from config import app as config
 
 define("port", default=8000, help="run on the given port", type=int)
 
 if __name__ == '__main__':
     parse_command_line()
-    app = Application(routes, **config)
+    app = Application(Route.get_routes(), **config)
     app.listen(options.port)
     IOLoop.configure('tornado.platform.asyncio.AsyncIOLoop')
     IOLoop.current().start()

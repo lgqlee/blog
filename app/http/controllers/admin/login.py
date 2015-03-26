@@ -7,10 +7,11 @@
 import tornado.gen
 
 from providers import qoutes
-from controllers import Controller
+from controllers import Controller, Route
 from models import user as User
 
 
+@Route("/admin/login")
 class AdminLoginController(Controller):
 
     def get(self):

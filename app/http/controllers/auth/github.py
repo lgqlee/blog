@@ -5,10 +5,12 @@
 # @Link    : http://vincenting.com
 
 import tornado.gen
-from app.http.controllers import Controller
+
+from app.http.controllers import Controller, Route
 from providers.oauth2.github import GithubOAuth2Mixin
 
 
+@Route("/auth/github")
 class GithubOAuth2LoginController(Controller, GithubOAuth2Mixin):
 
     @tornado.gen.coroutine

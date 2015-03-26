@@ -5,10 +5,12 @@
 # @Link    : http://vincenting.com
 
 import tornado.gen
-from app.http.controllers import Controller
+
+from app.http.controllers import Controller, Route
 from providers.oauth2.douban import DoubanOAuth2Mixin
 
 
+@Route("/auth/douban")
 class DoubanOAuth2LoginController(Controller, DoubanOAuth2Mixin):
 
     @tornado.gen.coroutine

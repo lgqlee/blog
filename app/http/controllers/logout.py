@@ -4,9 +4,9 @@
 # @Author  : Vincent Ting (homerdd@gmail.com)
 # @Link    : http://vincenting.com
 
-from controllers import Controller
+from controllers import Controller, Route
 
-
+@Route("/logout")
 class LogoutController(Controller):
 
     def get(self):
