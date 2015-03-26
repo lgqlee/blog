@@ -5,11 +5,14 @@
 # @Link    : http://vincenting.com
 
 from copy import deepcopy
+from tornado.gen import coroutine
 
 from .fields import *
 from .query import *
 
 DEFAULT_DATABASE = [None]
+# TODO 考虑添加严格模式，严格模式下会严格检查用户的每一条查询，包含错误则直接报错。建议开发环境使用，生产环境关闭。
+# TODO 考虑增加 DEBUG 模式，该模式下每次查询后都会在屏幕上打印出 explain() 的内容
 
 
 def set_database(database):
@@ -61,13 +64,11 @@ class ModelOptions(object):
                 return i
         return -1
 
-    def get_default_dict(self, data):
+    def get_default_dict(self):
         dd = self._default_by_name.copy()
         if self._default_callables:
             for field, default in self._default_callables.items():
                 dd[field.name] = default()
-        for field, value in data.items():
-            dd[field] = value
         return dd
 
 
@@ -81,6 +82,7 @@ class BaseModel(type):
         meta = attrs.pop('Meta', None)
         if meta:
             # 将 Meta 中所有的非私有属性全部带出
+            # todo 支持在 meta 中定义 index
             for k, v in meta.__dict__.items():
                 if not k.startswith('_'):
                     meta_options[k] = v
@@ -90,7 +92,7 @@ class BaseModel(type):
                 continue
             base_meta = getattr(b, '_meta')
             for (k, v) in base_meta.__dict__.items():
-                # TODO 考虑继承父类的 meta_options
+                # TODO 考虑继承父类的 meta_options，例如 meta 中自定义的特殊 index
                 pass
             for (k, v) in b.__dict__.items():
                 if k in attrs:
@@ -107,8 +109,7 @@ class BaseModel(type):
         cls._data = None
         # 初始化 collection 名称
         if not cls._meta.db_collection:
-            cls._meta.db_collection = re.sub(
-                '[^\w]+', '_', cls.__name__.lower())
+            cls._meta.db_collection = to_underscore(cls.__name__)
 
         # 找出所有的 Field 并使用 add_to_class 将他们绑定到当前 class
         fields = []
@@ -121,7 +122,7 @@ class BaseModel(type):
         if not meta_options.get("ignore_timestamp", False):
             for f in ("created_at", "updated_at"):
                 fields.append(
-                    (ObjectIdField(timestamp=True), f))
+                    (ObjectIdField(timestamp=True, readonly=True), f))
 
         for field, name in fields:
             field.add_to_class(cls, name)
@@ -135,10 +136,16 @@ class BaseModel(type):
 
 class Model(metaclass=BaseModel):
 
-    def __init__(self, data={}, **kwargs):
-        self._data = self._meta.get_default_dict(data)
+    def __init__(self, data=None, dirty=True, **kwargs):
+        """
+        如果没有指明 dirty 为 false，默认对比和默认值不一样的字段名称
+        并且把他们标记为脏数据
+        """
+        self._data = self._meta.get_default_dict()
+        self._dirty = set(self._data) & set(data) if dirty else set()
+        if data:
+            self._data.update(data)
         self._origin_data = self._data.copy()
-        self._dirty = set()
         self._obj_cache = {}
 
         for k, v in kwargs.items():
@@ -156,3 +163,30 @@ class Model(metaclass=BaseModel):
     @property
     def coll(cls):
         return cls._meta.database[cls._meta.db_collection]
+
+    @staticmethod
+    @coroutine
+    def create(cls, *documents, **kwargs):
+        pass
+
+    @staticmethod
+    def build(cls, *documents, **kwargs):
+        if len(documents) is 1:
+            return cls(documents[0], **kwargs)
+        return tuple([cls(doc, **kwargs) for doc in documents])
+
+    @coroutine
+    def save(self):
+        # TODO 在执行前需要执行每个字段对应的验证方法
+        pass
+
+    @coroutine
+    def delete(self, physical=Flase):
+        """
+        删除当前记录，默认为标记删除。如果需要的话，将physical设置为 True 进行物理删除
+        """
+        pass
+
+    @coroutine
+    def find(cls, **kwargs):
+        pass

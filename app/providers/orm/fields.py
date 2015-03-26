@@ -14,10 +14,35 @@ from bson import ObjectId
 from datetime import datetime
 
 
+def to_underscore(string):
+    """
+    将字符串转化为下划线风格的字符串
+    """
+    name = re.sub('([a-z_])([A-Z][_a-z])', '\\1 \\2', string)
+    return re.sub('[^\w+]', '_', name.lower())
+
+
+def returns_clone(func):
+    """
+    返回原对象的克隆对象的装饰器
+    """
+
+    def inner(self, *args, **kwargs):
+        clone = self.clone()  # Assumes object implements `clone`.
+        func(clone, *args, **kwargs)
+        return clone
+    inner.call_local = func  # Provide a way to call without cloning.
+    return inner
+
+
+class Node(object):
+    pass
+
+
 class FieldDescriptor(object):
 
     """
-    提供描述符，直接提供给 model 使用
+    提供描述器，直接提供给 model 使用
     """
 
     def __init__(self, field):
@@ -78,7 +103,7 @@ class Field(object):
         self.model_class = model_class
         self.column = self.column or self.name
         if not self.verbose_name:
-            self.verbose_name = re.sub("_+", " ", name).title()
+            self.verbose_name = to_underscore(name)
 
         model_class._meta.fields[self.name] = self
         model_class._meta.columns[self.column] = self
