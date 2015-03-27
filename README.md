@@ -13,6 +13,7 @@ Blog for vincenting.com.
 
 只支持 python 3.*
 
+* 安装 python3 所需要的依赖 `pip3 install -r requirements.txt`
 * `npm install`
 * `bower install && gulp prepare && gulp setup` 下载前端需要的第三方内容
 * `gulp watch`

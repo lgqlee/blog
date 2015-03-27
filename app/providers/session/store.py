@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # @Date    : 2015-03-15 14:27:13
 # @Author  : Vincent Ting (homerdd@gmail.com)
