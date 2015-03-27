@@ -19,6 +19,6 @@
   },
   "scripts": {
     "test": "nosetests ./tests --with-coverage -v",
-    "start": "python server.py"
+    "start": "python3 server.py"
   }
 }

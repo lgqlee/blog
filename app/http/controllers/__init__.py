@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # @Date    : 2015-03-15 15:36:31
 # @Author  : Vincent Ting (homerdd@gmail.com)
@@ -9,6 +9,24 @@ import tornado.web
 
 from providers import session, db
 from models import user as User
+
+
+class Route(object):
+    _routes = []
+
+    def __init__(self, uri, name=None):
+        self._uri = uri
+        self.name = name
+
+    def __call__(self, _handler):
+        """gets called when we class decorate"""
+        name = self.name or _handler.__name__
+        self._routes.append(tornado.web.url(self._uri, _handler, name=name))
+        return _handler
+
+    @classmethod
+    def get_routes(self):
+        return self._routes
 
 
 class Controller(tornado.web.RequestHandler):

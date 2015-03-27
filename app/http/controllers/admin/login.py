@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # @Date    : 2015-03-15 19:57:49
 # @Author  : Vincent Ting (homerdd@gmail.com)
@@ -7,10 +7,11 @@
 import tornado.gen
 
 from providers import qoutes
-from controllers import Controller
+from controllers import Controller, Route
 from models import user as User
 
 
+@Route("/admin/login")
 class AdminLoginController(Controller):
 
     def get(self):
